@@ -1,0 +1,6 @@
+delivery_id,order_id,address,status
+12,1,Мира 22,delivered
+14,3,Молокова 34,delivered
+15,4,Ленина 32,delivered
+18,2,Маркса 1,undelivered
+20,5,Горького 32,delivered
