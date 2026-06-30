@@ -1,0 +1,6 @@
+__pycache__
+.gradle/
+.vscode/
+bin/
+build/
+logs/

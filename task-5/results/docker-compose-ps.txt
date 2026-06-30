@@ -1,0 +1,11 @@
+docker compose ps
+-----------------------------------
+NAME                    IMAGE                                                   COMMAND                  SERVICE         CREATED         STATUS                   PORTS
+complete-app-1          batch-processing                                        "java -jar /app.jar"     app             2 minutes ago   Up About a minute        0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+complete-postgresdb-1   postgres:16                                             "docker-entrypoint.s…"   postgresdb      2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+elasticsearch           docker.elastic.co/elasticsearch/elasticsearch:7.17.28   "/bin/tini -- /usr/l…"   elasticsearch   2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:9200->9200/tcp, [::]:9200->9200/tcp, 0.0.0.0:9300->9300/tcp, [::]:9300->9300/tcp
+filebeat                complete-filebeat                                       "/usr/bin/tini -- /u…"   filebeat        2 minutes ago   Up 2 minutes
+grafana                 grafana/grafana:12.0.1                                  "/run.sh"                grafana         2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+kibana                  docker.elastic.co/kibana/kibana:7.17.28                 "/bin/tini -- /usr/l…"   kibana          2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:5601->5601/tcp, [::]:5601->5601/tcp
+logstash                docker.elastic.co/logstash/logstash:7.17.28             "/usr/local/bin/dock…"   logstash        2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:5044->5044/tcp, [::]:5044->5044/tcp, 9600/tcp
+prometheus              prom/prometheus:v3.4.0                                  "/bin/prometheus --c…"   prometheus      2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp

@@ -1,0 +1,33 @@
+@startuml architecture
+
+!include <C4/C4_Container>
+
+title TradeWare ETL System with Spring Batch
+
+Person(warehouse_employee, "Сотрудник склада", "Загружает CSV-отчеты об остатках")
+
+System_Boundary(tradeware, "TradeWare System") {
+  Container(erp_ui, "ERP Web UI", "Angular, WebSockets", "Интерфейс для загрузки отчетов и мониторинга обработки")
+  Container(monolith, "Monolith Backend", "Java 11, WildFly", "Существующая бизнес-логика, API для фронтенда")
+  Container(batch_app, "Spring Batch ETL", "Spring Boot, Spring Batch", "Пакетная обработка CSV-файлов")
+  ContainerDb(postgres, "Database", "PostgreSQL", "Хранение данных: результаты, справочники, метаданные")
+  Container(gcs, "Google Cloud Storage", "GCS", "Хранилище загруженных CSV-файлов")
+  Container(monitoring, "Monitoring Stack", "Prometheus, Grafana", "Сбор метрик и визуализация")
+}
+
+Rel(warehouse_employee, erp_ui, "Загружает CSV-отчет", "HTTPS")
+Rel(erp_ui, monolith, "Валидирует и инициирует обработку", "REST API")
+Rel(monolith, gcs, "Сохраняет CSV-файл", "GCS API")
+Rel(monolith, batch_app, "Запускает batch job", "JobLauncher")
+
+Rel(batch_app, gcs, "Читает CSV-файл", "GCS API")
+Rel(batch_app, postgres, "Читает справочные данные", "JDBC")
+Rel(batch_app, postgres, "Пакетная запись результатов", "JDBC Batch Insert")
+Rel(batch_app, postgres, "Сохраняет метаданные job", "JDBC")
+
+Rel(batch_app, monitoring, "Экспортирует метрики", "Micrometer / Actuator")
+Rel(batch_app, erp_ui, "Отправляет уведомления о статусе обработки", "WebSocket")
+
+Rel(warehouse_employee, erp_ui, "Мониторит прогресс", "HTTPS")
+
+@enduml

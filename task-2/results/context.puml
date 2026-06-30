@@ -1,0 +1,24 @@
+@startuml context
+
+!include <C4/C4_Context>
+
+title Контекстная диаграмма системы генерации прайс-листов
+
+Person(b2b_client, "B2B Клиент", "Получает кастомные прайс-листы")
+
+System_Boundary(cloud_infrastructure, "Облачная инфраструктура") {
+    System(k8s_scheduler, "Kubernetes", "Оркестратор и планировщик (CronJob)")
+    System(pricing_service, "Price List Service", "Микросервис генерации прайс-листов (Spring Batch)")
+    SystemDb(work_database, "Work Database", "Актуальные данные о ценах на товары (Postgres)")
+    System(s3_storage, "Object Storage", "Хранилище файлов с прайсами (MinIO)")
+    System(notification_service, "Notification Service", "Сервис уведомлений (Email/SMS)")
+}
+
+Rel(k8s_scheduler, pricing_service, "Запускает по расписанию", "CronJob")
+Rel(pricing_service, work_database, "Читает данные", "JDBC")
+Rel(pricing_service, s3_storage, "Сохраняет CSV/XLS файлы", "S3 API")
+Rel(pricing_service, notification_service, "Отправляет уведомления", "REST API")
+Rel(notification_service, b2b_client, "Отправляет уведомления", "Email/SMS")
+Rel(b2b_client, s3_storage, "Получает прайс-листы", "HTTPS")
+
+@enduml
